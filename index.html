@@ -1,188 +1,679 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seconds — Domine seu Marketplace</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seconds — Domine seu Marketplace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <style>
+        /* --- GLOBAIS E VARIÁVEIS --- */
+        :root {
+            --dark-bg: #111317;
+            --dark-bg-subtle: #1C1E22;
+            --pure-white: #ffffff;
+            --primary-accent: #7A00FF; /* Roxo Neon */
+            --secondary-accent: #3A86FF; /* Azul Forte */
+            --vibrant-yellow: #FFCE00; /* Mantido para selos */
+            --text-color: #EAEAEA;
+            --text-dark: #111317;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --gap-desktop: 1.5rem;
+            --gap-mobile: 1.5rem;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* --- FUNDO DECORATIVO --- */
+        .background-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+            animation: moveGrid 60s linear infinite;
+        }
+
+        @keyframes moveGrid {
+          from { background-position: 0 0; }
+          to { background-position: -500px -500px; }
+        }
+
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.1;
+            filter: blur(100px);
+            animation: moveAura 20s infinite alternate;
+        }
+
+        body::before {
+            background: var(--primary-accent);
+            top: -10%;
+            left: -20%;
+        }
+
+        body::after {
+            background: var(--secondary-accent);
+            bottom: -10%;
+            right: -20%;
+            animation-delay: -10s;
+        }
+
+        @keyframes moveAura {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(100px, 50px) scale(1.2); }
+        }
+
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* --- CABEÇALHO E NAVEGAÇÃO --- */
+        .main-header { position: fixed; top: 0; left: 0; width: 100%; background: rgba(17, 19, 23, 0.8); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--border-color); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; height: 70px; }
+        .header-left { display: flex; align-items: center; gap: 1.5rem; }
+        .menu-button { background: none; border: none; color: var(--pure-white); font-size: 2.5rem; cursor: pointer; padding: 0; line-height: 1; }
+        .logo img { height: 40px; width: auto; display: block; }
+
+        .side-menu { position: fixed; top: 0; left: -300px; width: 300px; height: 100%; background: rgba(28, 30, 34, 0.9); backdrop-filter: blur(15px); z-index: 1001; display: flex; flex-direction: column; padding-top: 5rem; transition: left 0.4s ease; }
+        .side-menu.active { left: 0; }
+        .side-menu a { color: var(--pure-white); text-decoration: none; font-size: 1.2rem; padding: 1.5rem 2rem; transition: color 0.3s ease, background-color 0.3s ease; }
+        .side-menu a:hover { background-color: var(--primary-accent); color: var(--pure-white);}
+
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; opacity: 0; visibility: hidden; transition: opacity 0.4s ease; }
+        .menu-overlay.active { opacity: 1; visibility: visible; }
+
+        /* --- BOTÕES --- */
+        .cta-button { 
+            background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent)); 
+            color: var(--pure-white); 
+            padding: 0.7rem 1.6rem; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            transition: all 0.4s ease; 
+            border: none;
+            background-size: 200% auto;
+        }
+        .cta-button:hover { 
+            background-position: right center;
+            box-shadow: 0 0 20px rgba(122, 0, 255, 0.5);
+            transform: scale(1.05); 
+        }
+        .cta-button:active { transform: scale(0.98); }
+        .cta-button.secondary { background: transparent; color: var(--secondary-accent); border: 2px solid var(--secondary-accent); }
+        .cta-button.secondary:hover { background: var(--secondary-accent); color: var(--pure-white); border-color: var(--secondary-accent); }
+
+
+        /* --- SEÇÕES --- */
+        main { padding-top: 70px; }
+        .content-section { padding: 2.5rem 0; }
+        
+        .hero-section { 
+            padding: 2.5rem 0; 
+            text-align: center; 
+        }
+        
+        .hero-title {
+            font-weight: 700;
+            max-width: 1100px;
+            font-size: clamp(2.2rem, 4vw, 2.8rem);
+            line-height: 1.4;
+            margin: 0 auto 2.5rem auto;
+        }
+       
+        .highlight-word-blue { 
+            color: var(--secondary-accent); 
+            font-weight: 700; 
+            text-transform: uppercase; 
+        }
+
+        .section-title { text-align: center; font-size: clamp(1.8rem, 3.5vw, 2.2rem); font-weight: 700; margin-bottom: 2rem; position: relative; }
+        .section-title-left { text-align: left; font-size: clamp(1.8rem, 3.5vw, 2.2rem); font-weight: 700; margin-bottom: 2rem; }
+
+        /* --- CARDS --- */
+        .card-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: var(--gap-desktop);
+        }
+        
+        .interactive-card {
+            cursor: pointer; 
+            transition: transform 0.2s ease-out, box-shadow 0.4s ease-out;
+            position: relative;
+        }
+        
+        .card-pressed {
+            transform: translateY(2px) scale(0.98) !important;
+            transition-duration: 0.1s !important;
+        }
+        .interactive-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(122, 0, 255, 0.2);
+        }
+        
+        .card { 
+            background: rgba(28, 30, 34, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            border-radius: 16px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: var(--text-color);
+            position: relative;
+            overflow: hidden;
+            width: 100%; height: 100%;
+            padding: 2.5rem 2rem;
+        }
+
+        .card-integration {
+            padding: 2rem;
+        }
+       
+        .integration-brand-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .card-light { 
+            background: rgba(28, 30, 34, 0.6);
+            padding: 2rem; 
+            aspect-ratio: 1/1;
+        }
+        
+       .icon-funcionalidade {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+  width: 56px;
+  height: 56px;
+}
+.icon-funcionalidade svg {
+  display: block;
+  margin: 0 auto;
+}
+
+        .card-light h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--pure-white); }
+        .card-light p { font-size: 0.9rem; color: var(--text-color); opacity: 0.8; }
+        
+        .card-cta { background-color: var(--primary-accent); color: var(--pure-white); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; border-radius: 16px; }
+        .card-cta:hover { background-color: var(--secondary-accent); }
+        .card-cta .card-icon-cta { font-size: 3rem; font-weight: 300; line-height: 1; }
+        .card-cta h3 { margin-top: 1rem; font-size: 1.2rem;}
+
+        #funcionalidades .card-container {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        /* --- SEÇÃO SELOS E SEGURANÇA --- */
+        .security-container { text-align: center; }
+        .security-container p { max-width: 650px; margin: 0 auto 2rem auto; opacity: 0.8; line-height: 1.6; }
+        .seals-grid { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 2rem; }
+        .seal-item { background-color: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; width: 180px; text-align: center; transition: transform 0.3s ease; }
+        .seal-item:hover { transform: translateY(-5px); }
+        .seal-icon { font-size: 2.5rem; margin-bottom: 0.75rem; color: var(--vibrant-yellow); }
+        .seal-text { font-weight: 600; font-size: 1rem; }
+
+        /* --- SEÇÃO DEPOIMENTOS --- */
+        .testimonial-carousel { display: flex; gap: var(--gap-desktop); overflow-x: auto; padding-bottom: 1.5rem; scroll-snap-type: x mandatory; -ms-overflow-style: none; scrollbar-width: none; }
+        .testimonial-carousel::-webkit-scrollbar { display: none; }
+        .card-testimonial { flex: 0 0 350px; background: var(--dark-bg-subtle); padding: 2rem; border-radius: 16px; border-top: 4px solid var(--primary-accent); position: relative; scroll-snap-align: start; }
+        .testimonial-quote-icon { position: absolute; top: 1rem; right: 1.5rem; font-size: 5rem; color: rgba(255,255,255,0.05); font-weight: 700; }
+        .testimonial-author { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+        .testimonial-author img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--primary-accent); object-fit: cover; }
+        .testimonial-author h4 { margin: 0; }
+        .testimonial-author span { font-size: 0.9rem; opacity: 0.7; }
+        .card-testimonial p { font-weight: 300; font-style: italic; }
+
+        /* --- SEÇÃO PARCEIROS --- */
+        .partners-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 2.5rem 3.5rem;
+        }
+        .partner-logo img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+            filter: grayscale(100%);
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+        .partner-logo img:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* --- SEÇÃO SOBRE NÓS --- */
+        .about-us-container { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: center; }
+        .about-us-image img { width: 100%; height: 100%; border-radius: 16px; object-fit: cover; max-height: 400px;}
+        .about-us-text h2 { font-size: clamp(1.8rem, 3vw, 2.2rem); margin-bottom: 1rem; }
+        .about-us-text .mission { opacity: 0.8; margin-bottom: 1.5rem; font-size: 1.1rem; }
+        .about-us-text p { line-height: 1.7; }
+        
+        /* --- SEÇÃO CTA FINAL --- */
+        .cta-final-section { padding: 4rem 0; text-align: center; background: transparent; }
+        .cta-final-section h2 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1rem; }
+        .cta-final-section p { max-width: 500px; margin: 0 auto 2rem auto; opacity: 0.8; }
+        .cta-buttons-container { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+        .cta-buttons-container .cta-button { padding: 1rem 2.5rem; font-size: 1.1rem; }
+
+        /* --- RODAPÉ --- */
+        .main-footer-section { padding: 4rem 0; background-color: #000000; border-top: 1px solid var(--border-color); }
+        .footer-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+        .footer-column h4 { font-size: 1.1rem; margin-bottom: 1rem; color: var(--primary-accent); }
+        .footer-column p, .footer-column a { color: var(--text-color); opacity: 0.7; text-decoration: none; line-height: 1.8; transition: opacity 0.3s ease, color 0.3s ease; }
+        .footer-column a:hover { opacity: 1; color: var(--primary-accent); }
+        .footer-column .logo { margin-bottom: 1rem; }
+
+        /* --- ANIMAÇÕES GERAIS --- */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 768px) { /* Mobile */
+            .container { padding: 0 1.5rem; }
+            .header-content .cta-button { display: none; }
+            .menu-button { display: block; }
+            
+            .card-container {
+                grid-template-columns: 1fr;
+                gap: var(--gap-mobile);
+            }
+            #funcionalidades .card-container {
+                 grid-template-columns: 1fr;
+            }
+            
+            .section-title-left { text-align: center; }
+            .testimonial-carousel { gap: var(--gap-mobile); }
+            .card-testimonial { flex-basis: 85%; }
+            .about-us-container { grid-template-columns: 1fr; }
+            .about-us-image { margin-bottom: 2rem; }
+            .footer-container { text-align: center; }
+            .seal-item { width: 150px; }
+            
+            body::before, body::after {
+                width: 300px;
+                height: 300px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- Fundo decorativo opcional -->
-  <div class="background-grid"></div>
+    <div class="background-grid"></div>
 
-  <!-- Cabeçalho fixo -->
-  <header class="main-header">
-    <div class="header-content container">
-      <div class="header-left">
-        <button id="menu-toggle" class="menu-button">≡</button>
-        <div class="logo">
-          <img src="https://www.seconds.com.br/wp-content/uploads/2023/08/logo-seconds.png" alt="Logo da Seconds" />
-        </div>
-      </div>
-      <a href="#contato" class="cta-button">Contrate Já</a>
-    </div>
-  </header>
-
-  <!-- Menu lateral -->
-  <nav id="side-menu" class="side-menu">
-    <a href="#integracoes">Integrações</a>
-    <a href="#funcionalidades">Funcionalidades</a>
-    <a href="#seguranca">Selos e Segurança</a>
-    <a href="#depoimentos">Depoimentos</a>
-    <a href="#parceiros">Parceiros</a>
-    <a href="#sobre">Sobre</a>
-    <a href="#contato">Contato</a>
-  </nav>
-  <div id="menu-overlay" class="menu-overlay"></div>
-
-  <main>
-    <!-- Hero -->
-    <section class="hero-section">
-      <div class="hero-content container">
-        <h1 class="hero-title animate-on-scroll">
-          O mais <span class="highlight-word-blue">COMPLETO</span> sistema de Gestão de Marketplace.
-        </h1>
-      </div>
-    </section>
-
-    <!-- Integrações -->
-    <section id="integracoes" class="content-section">
-      <div class="container">
-        <h2 class="section-title animate-on-scroll">Integrações</h2>
-        <div class="card-container">
-          <div class="card card-integration interactive-card animate-on-scroll">
-            <h3 class="integration-brand-name">Mercado Livre</h3>
-          </div>
-          <div class="card card-integration interactive-card animate-on-scroll">
-            <h3 class="integration-brand-name">Shopee</h3>
-          </div>
-          <div class="card card-integration interactive-card animate-on-scroll">
-            <h3 class="integration-brand-name">Magalu</h3>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Funcionalidades -->
-    <section id="funcionalidades" class="content-section">
-      <div class="container">
-        <h2 class="section-title animate-on-scroll">Funcionalidades</h2>
-        <div class="card-container">
-          <div class="card-light interactive-card animate-on-scroll">
-            <h3>Lucratividade</h3>
-            <p>Descubra os fatores que impactam seu lucro e impulsione o crescimento do seu negócio!</p>
-          </div>
-          <div class="card-light interactive-card animate-on-scroll">
-            <h3>Anúncio Perfeito</h3>
-            <p>Compreenda as regras do jogo e eleve o desempenho da sua operação!</p>
-          </div>
-          <div class="card-light interactive-card animate-on-scroll">
-            <h3>Concorrência</h3>
-            <p>Descubra as melhores estratégias dos seus concorrentes e mantenha-se sempre à frente!</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Segurança -->
-    <section id="seguranca" class="content-section">
-      <div class="container security-container">
-        <h2 class="section-title animate-on-scroll">Selos e Segurança</h2>
-        <p class="animate-on-scroll">Utilizamos criptografia e backup para proteger seus dados com o mais alto padrão de segurança.</p>
-        <div class="seals-grid animate-on-scroll">
-          <div class="seal-item"><div class="seal-icon">🔒</div><div class="seal-text">Criptografia SSL</div></div>
-          <div class="seal-item"><div class="seal-icon">🛡️</div><div class="seal-text">LGPD</div></div>
-          <div class="seal-item"><div class="seal-icon">☁️</div><div class="seal-text">Servidores Seguros</div></div>
-          <div class="seal-item"><div class="seal-icon">🔄</div><div class="seal-text">Backups Diários</div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Depoimentos -->
-    <section id="depoimentos" class="content-section">
-      <div class="container">
-        <h2 class="section-title-left animate-on-scroll">Quem usa, aprova</h2>
-        <div class="testimonial-carousel animate-on-scroll">
-          <div class="card-testimonial">
-            <div class="testimonial-quote-icon">“</div>
-            <div class="testimonial-author">
-              <img src="https://i.pravatar.cc/50?img=1" alt="Mariana Costa">
-              <div>
-                <h4>Mariana Costa</h4>
-                <span>CEO, Loja Impulso</span>
-              </div>
+    <header class="main-header">
+        <div class="header-content container">
+            <div class="header-left">
+                <button id="menu-toggle" class="menu-button">≡</button>
+                <div class="logo">
+                    <img src="https://www.seconds.com.br/wp-content/uploads/2023/08/logo-seconds.png" alt="Logo da Seconds">
+                </div>
             </div>
-            <p>"Com o Seconds, centralizamos tudo. Nosso faturamento cresceu 30%!"</p>
-          </div>
-          <div class="card-testimonial">
-            <div class="testimonial-quote-icon">“</div>
-            <div class="testimonial-author">
-              <img src="https://i.pravatar.cc/50?img=2" alt="Lucas Andrade">
-              <div>
-                <h4>Lucas Andrade</h4>
-                <span>Gerente, Techzilla</span>
-              </div>
+            <a href="#contato" class="cta-button">Contrate Já</a>
+        </div>
+    </header>
+
+    <nav id="side-menu" class="side-menu">
+        <a href="#integracoes">Integrações</a>
+        <a href="#funcionalidades">Funcionalidades</a>
+        <a href="#seguranca">Selos e Segurança</a>
+        <a href="#depoimentos">Depoimentos</a>
+        <a href="#parceiros">Parceiros</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+    </nav>
+    <div id="menu-overlay" class="menu-overlay"></div>
+
+    <main>
+
+        <section class="hero-section">
+            <div class="hero-content container">
+                <h1 class="hero-title animate-on-scroll">
+                   O mais <span class="highlight-word-blue">COMPLETO</span> sistema de Gestão de Marketplace.
+                </h1>
             </div>
-            <p>"Ajustamos nossos preços e saímos na frente. Ferramenta essencial."</p>
-          </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <!-- Parceiros -->
-    <section id="parceiros" class="content-section">
-      <div class="container">
-        <h2 class="section-title animate-on-scroll">Conheça nossos parceiros</h2>
-        <div class="partners-grid animate-on-scroll">
-          <div class="partner-logo"><img src="https://www.seconds.com.br/wp-content/uploads/2023/07/logo-bling.png" alt="Bling"></div>
-          <div class="partner-logo"><img src="https://www.seconds.com.br/wp-content/uploads/2023/07/logo-tiny.svg" alt="Tiny"></div>
-          <div class="partner-logo"><img src="https://www.seconds.com.br/wp-content/uploads/2023/07/logo-vtex.svg" alt="VTEX"></div>
-        </div>
-      </div>
-    </section>
+        <section id="integracoes" class="content-section">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">Integrações</h2>
+                <div class="card-container">
+                    <div class="card card-integration interactive-card animate-on-scroll">
+                         <h3 class="integration-brand-name">Mercado Livre</h3>
+                         <div class="card-glow"></div>
+                    </div>
+                    <div class="card card-integration interactive-card animate-on-scroll">
+                         <h3 class="integration-brand-name">Shopee</h3>
+                        <div class="card-glow"></div>
+                    </div>
+                    <div class="card card-integration interactive-card animate-on-scroll">
+                         <h3 class="integration-brand-name">Magalu</h3>
+                         <div class="card-glow"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- Sobre nós -->
-    <section id="sobre" class="content-section">
-      <div class="container about-us-container">
-        <div class="about-us-text animate-on-scroll">
-          <h2>Nascemos para simplificar o complexo.</h2>
-          <p class="mission"><i>Nossa missão é dar clareza para transformar dados em decisões lucrativas.</i></p>
-          <p>Vendedores como você enfrentam muitos desafios no dia a dia — criamos o Seconds para descomplicar.</p>
-        </div>
-        <div class="about-us-image animate-on-scroll">
-          <img src="https://www.seconds.com.br/wp-content/uploads/2024/01/Evento-Mercado-Livre.png" alt="Evento Seconds">
-        </div>
-      </div>
-    </section>
+        <section id="funcionalidades" class="content-section">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">Funcionalidades</h2>
+                <div class="card-container" id="funcionalidades-grid">
+                    <div class="card-light interactive-card animate-on-scroll">
+                        <svg class="icon-funcionalidade lucratividade-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:var(--secondary-accent);stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:var(--primary-accent);stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <path class="line" d="M8 50L22 36L34 44L56 22" stroke="url(#grad1)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M56 32V22H46" stroke="var(--primary-accent)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle class="circle" cx="8" cy="50" r="4" fill="var(--secondary-accent)"/>
+                        </svg>
+                        <h3>Lucratividade</h3>
+                        <p>Descubra os fatores que impactam seu lucro e impulsione o crescimento do seu negócio!</p>
+                         <div class="card-glow"></div>
+                    </div>
+                    <div class="card-light interactive-card animate-on-scroll">
+                        <svg class="icon-funcionalidade anuncio-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:var(--secondary-accent);stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:var(--primary-accent);stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <path class="bulb" d="M32 10C20.9543 10 12 18.9543 12 30V40C12 45.5228 16.4772 50 22 50H42C47.5228 50 52 45.5228 52 40V30C52 18.9543 43.0457 10 32 10Z" stroke="var(--secondary-accent)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path class="bulb" d="M32 10V4" stroke="var(--secondary-accent)" stroke-width="4" stroke-linecap="round"/>
+                            <path class="bulb" d="M22 50C22 56.6274 26.4772 62 32 62C37.5228 62 42 56.6274 42 50" stroke="var(--secondary-accent)" stroke-width="4" stroke-linecap="round"/>
+                            <path class="check" d="M24 24L30 30L40 20" stroke="url(#grad2)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <h3>Anúncio Perfeito</h3>
+                        <p>Compreenda as regras do jogo e eleve o desempenho da sua operação!</p>
+                         <div class="card-glow"></div>
+                    </div>
+                    <div class="card-light interactive-card animate-on-scroll">
+                        <svg class="icon-funcionalidade concorrencia-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="grad3" x1="0%" y1="100%" x2="0%" y2="0%">
+                                    <stop offset="0%" style="stop-color:var(--primary-accent);stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:var(--secondary-accent);stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <rect class="bar bar-1" x="8" y="36" width="10" height="20" rx="4" fill="url(#grad3)"/>
+                            <rect class="bar bar-2" x="27" y="24" width="10" height="32" rx="4" fill="url(#grad3)"/>
+                            <rect class="bar bar-3" x="46" y="8" width="10" height="48" rx="4" fill="url(#grad3)"/>
+                        </svg>
+                        <h3>Concorrência</h3>
+                        <p>Descubra as melhores estratégias dos seus concorrentes e mantenha-se sempre à frente!</p>
+                         <div class="card-glow"></div>
+                    </div>
+                    <div class="card-cta interactive-card animate-on-scroll">
+                        <div class="card-icon-cta">➕</div>
+                        <h3>Clique e veja mais funcionalidades</h3>
+                         <div class="card-glow"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="seguranca" class="content-section">
+            <div class="container security-container">
+                <h2 class="section-title animate-on-scroll">Selos e Segurança</h2>
+                <p class="animate-on-scroll">Utilizamos as tecnologias mais avançadas de criptografia e proteção de dados para garantir que suas informações estejam sempre protegidas e acessíveis apenas para você.</p>
+                <div class="seals-grid animate-on-scroll">
+                    <div class="seal-item">
+                        <div class="seal-icon">🔒</div>
+                        <div class="seal-text">Criptografia SSL/TLS</div>
+                    </div>
+                    <div class="seal-item">
+                        <div class="seal-icon">🛡️</div>
+                        <div class="seal-text">LGPD Compliant</div>
+                    </div>
+                    <div class="seal-item">
+                        <div class="seal-icon">☁️</div>
+                        <div class="seal-text">Servidores Seguros</div>
+                    </div>
+                    <div class="seal-item">
+                        <div class="seal-icon">🔄</div>
+                        <div class="seal-text">Backups Diários</div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- CTA final -->
-    <section id="contato" class="cta-final-section">
-      <div class="container animate-on-scroll">
-        <h2>Pronto para dominar seu marketplace?</h2>
-        <p>Fale com um especialista ou comece a usar agora mesmo.</p>
-        <div class="cta-buttons-container">
-          <a href="#" class="cta-button">Contrate Já</a>
-          <a href="#" class="cta-button secondary">Agendar Demonstração</a>
-        </div>
-      </div>
-    </section>
-  </main>
+        <section id="depoimentos" class="content-section">
+            <div class="container">
+                <h2 class="section-title-left animate-on-scroll">Quem usa, aprova</h2>
+                <div class="testimonial-carousel animate-on-scroll">
+                    <div class="card-testimonial">
+                        <div class="testimonial-quote-icon">“</div>
+                        <div class="testimonial-author">
+                            <img src="https://i.pravatar.cc/50?img=1" alt="Foto de Mariana Costa" onerror="this.style.display='none'">
+                            <div>
+                                <h4>Mariana Costa</h4>
+                                <span>CEO, Loja Impulso</span>
+                            </div>
+                        </div>
+                        <p>"Com o Seconds, centralizamos toda nossa operação. O que antes levava horas, agora é resolvido com poucos cliques. Nosso faturamento cresceu 30%!"</p>
+                    </div>
+                    <div class="card-testimonial">
+                        <div class="testimonial-quote-icon">“</div>
+                        <div class="testimonial-author">
+                            <img src="https://i.pravatar.cc/50?img=2" alt="Foto de Lucas Andrade" onerror="this.style.display='none'">
+                            <div>
+                                <h4>Lucas Andrade</h4>
+                                <span>Gerente, Techzilla</span>
+                            </div>
+                        </div>
+                        <p>"A análise de concorrência é revolucionária. Conseguimos ajustar nossos preços e estratégias em tempo real e saímos na frente."</p>
+                    </div>
+                    <div class="card-testimonial">
+                        <div class="testimonial-quote-icon">“</div>
+                        <div class="testimonial-author">
+                            <img src="https://i.pravatar.cc/50?img=3" alt="Foto de Fernanda Lima" onerror="this.style.display='none'">
+                            <div>
+                                <h4>Fernanda Lima</h4>
+                                <span>Vendedora Platinum</span>
+                            </div>
+                        </div>
+                        <p>"A plataforma é intuitiva e o suporte é fantástico. A ferramenta de 'Anúncio Perfeito' me ajudou a dobrar minhas vendas em 3 meses."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <!-- Rodapé -->
-  <footer class="main-footer-section">
-    <div class="container footer-container">
-      <div class="footer-column">
-        <div class="logo">
-          <img src="https://www.seconds.com.br/wp-content/uploads/2023/08/logo-seconds.png" alt="Logo da Seconds" />
-        </div>
-        <p>&copy; 2025 Seconds. <br />Todos os direitos reservados.</p>
-      </div>
-    </div>
-  </footer>
+        <section id="parceiros" class="content-section">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">Conheça nossos parceiros</h2>
+                <div class="partners-grid animate-on-scroll">
+                    <div class="partner-logo">
+                        <img src="https://www.seconds.com.br/wp-content/uploads/2023/07/logo-bling.png" alt="Logo da Bling">
+                    </div>
+                    <div class="partner-logo">
+                        <img src="https://www.seconds.com.br/wp-content/uploads/2023/07/logo-tiny.svg" alt="Logo da Tiny">
+                    </div>
+                    <div class="partner-logo">
+                        <img src="https://www.seconds.com.br/wp-content/uploads/2023/07/logo-tray.png" alt="Logo da Tray">
+                    </div>
+                    <div class="partner-logo">
+                        <img src="https://www.seconds.com.br/wp-content/uploads/2023/07/logo-vtex.svg" alt="Logo da VTEX">
+                    </div>
+                     <div class="partner-logo">
+                        <img src="https://www.seconds.com.br/wp-content/uploads/2023/07/logo-shopify.png" alt="Logo da Shopify">
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <script src="js/main.js"></script>
+        <section id="sobre" class="content-section">
+            <div class="container about-us-container">
+                <div class="about-us-image animate-on-scroll">
+                    <img src="https://www.seconds.com.br/wp-content/uploads/2024/01/Evento-Mercado-Livre.png" alt="Equipa da Seconds num evento do Mercado Livre" onerror="this.onerror=null;this.src='https://placehold.co/600x400/2a2a2a/ffffff?text=Sobre+Nós';">
+                </div>
+                <div class="about-us-text animate-on-scroll" style="animation-delay: 100ms;">
+                    <h2>Nascemos para simplificar o complexo.</h2>
+                    <p class="mission"><i>Nossa missão é dar a você o poder e a clareza para transformar dados em decisões lucrativas.</i></p>
+                    <p>A Seconds nasceu da experiência real de vendedores de marketplaces que, como você, se sentiam sobrecarregados com a complexidade de gerenciar múltiplos canais. Decidimos transformar essa dor em uma solução: uma plataforma intuitiva que centraliza informações e gera insights que realmente importam.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contato" class="cta-final-section">
+            <div class="container animate-on-scroll">
+                <h2>Pronto para dominar seu marketplace?</h2>
+                <p>Fale com um especialista ou comece a usar agora mesmo.</p>
+                <div class="cta-buttons-container">
+                    <a href="#" class="cta-button">Contrate Já</a>
+                    <a href="#" class="cta-button secondary">Agendar Demonstração</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer-section">
+        <div class="container footer-container">
+            <div class="footer-column">
+                <div class="logo">
+                     <img src="https://www.seconds.com.br/wp-content/uploads/2023/08/logo-seconds.png" alt="Logo da Seconds">
+                </div>
+                <p>&copy; 2025 Seconds. <br>Todos os direitos reservados.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Navegação</h4>
+                <a href="#integracoes">Integrações</a>
+                <a href="#funcionalidades">Funcionalidades</a>
+                <a href="#sobre">Sobre</a>
+            </div>
+            <div class="footer-column">
+                <h4>Legal</h4>
+                <a href="#">Termos de Uso</a>
+                <a href="#">Política de Privacidade</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- LÓGICA DO MENU LATERAL ---
+            const menuToggle = document.getElementById('menu-toggle');
+            const sideMenu = document.getElementById('side-menu');
+            const menuOverlay = document.getElementById('menu-overlay');
+            const menuLinks = document.querySelectorAll('.side-menu a');
+
+            const closeMenu = () => {
+                sideMenu.classList.remove('active');
+                menuOverlay.classList.remove('active');
+            };
+            
+            const openMenu = () => {
+                sideMenu.classList.add('active');
+                menuOverlay.classList.add('active');
+            };
+
+            menuToggle.addEventListener('click', () => {
+                if (sideMenu.classList.contains('active')) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+            });
+            menuOverlay.addEventListener('click', closeMenu);
+            menuLinks.forEach(link => {
+                link.addEventListener('click', closeMenu);
+            });
+
+
+            // --- LÓGICA DO SOM E ANIMAÇÃO DE CLIQUE GLOBAL ---
+            let soundReady = false;
+            const synth = new Tone.Synth({
+                oscillator: { type: 'sine' },
+                envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.1 }
+            }).toDestination();
+            synth.volume.value = -12; 
+
+            const initAudio = async () => {
+                try {
+                    await Tone.start();
+                    soundReady = true;
+                } catch(e) {
+                    console.error("Could not start audio context: ", e);
+                }
+            };
+            document.body.addEventListener('click', initAudio, { once: true });
+
+
+            const interactiveCards = document.querySelectorAll('.interactive-card');
+            
+            interactiveCards.forEach(card => {
+                card.addEventListener('mousedown', () => {
+                    card.classList.add('card-pressed');
+                    if (soundReady) {
+                        synth.triggerAttackRelease("C5", "16n");
+                    }
+                });
+                card.addEventListener('mouseup', () => card.classList.remove('card-pressed'));
+                 card.addEventListener('mouseleave', () => card.classList.remove('card-pressed'));
+            });
+
+            // --- LÓGICA DE ANIMAÇÃO AO ROLAR A PÁGINA ---
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            animatedElements.forEach(el => observer.observe(el));
+            
+        });
+    </script>
 </body>
 </html>
+
 
 
