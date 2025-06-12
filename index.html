@@ -8,6 +8,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
 </head>
 <body>
+  <!-- Fundo decorativo opcional -->
+  <div class="background-grid"></div>
+
+  <!-- Cabeçalho fixo -->
   <header class="main-header">
     <div class="header-content container">
       <div class="header-left">
@@ -20,7 +24,20 @@
     </div>
   </header>
 
+  <!-- Menu lateral -->
+  <nav id="side-menu" class="side-menu">
+    <a href="#integracoes">Integrações</a>
+    <a href="#funcionalidades">Funcionalidades</a>
+    <a href="#seguranca">Selos e Segurança</a>
+    <a href="#depoimentos">Depoimentos</a>
+    <a href="#parceiros">Parceiros</a>
+    <a href="#sobre">Sobre</a>
+    <a href="#contato">Contato</a>
+  </nav>
+  <div id="menu-overlay" class="menu-overlay"></div>
+
   <main>
+    <!-- Hero -->
     <section class="hero-section">
       <div class="hero-content container">
         <h1 class="hero-title animate-on-scroll">
@@ -29,6 +46,117 @@
       </div>
     </section>
 
+    <!-- Integrações -->
+    <section id="integracoes" class="content-section">
+      <div class="container">
+        <h2 class="section-title animate-on-scroll">Integrações</h2>
+        <div class="card-container">
+          <div class="card card-integration interactive-card animate-on-scroll">
+            <h3 class="integration-brand-name">Mercado Livre</h3>
+          </div>
+          <div class="card card-integration interactive-card animate-on-scroll">
+            <h3 class="integration-brand-name">Shopee</h3>
+          </div>
+          <div class="card card-integration interactive-card animate-on-scroll">
+            <h3 class="integration-brand-name">Magalu</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Funcionalidades -->
+    <section id="funcionalidades" class="content-section">
+      <div class="container">
+        <h2 class="section-title animate-on-scroll">Funcionalidades</h2>
+        <div class="card-container">
+          <div class="card-light interactive-card animate-on-scroll">
+            <h3>Lucratividade</h3>
+            <p>Descubra os fatores que impactam seu lucro e impulsione o crescimento do seu negócio!</p>
+          </div>
+          <div class="card-light interactive-card animate-on-scroll">
+            <h3>Anúncio Perfeito</h3>
+            <p>Compreenda as regras do jogo e eleve o desempenho da sua operação!</p>
+          </div>
+          <div class="card-light interactive-card animate-on-scroll">
+            <h3>Concorrência</h3>
+            <p>Descubra as melhores estratégias dos seus concorrentes e mantenha-se sempre à frente!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Segurança -->
+    <section id="seguranca" class="content-section">
+      <div class="container security-container">
+        <h2 class="section-title animate-on-scroll">Selos e Segurança</h2>
+        <p class="animate-on-scroll">Utilizamos criptografia e backup para proteger seus dados com o mais alto padrão de segurança.</p>
+        <div class="seals-grid animate-on-scroll">
+          <div class="seal-item"><div class="seal-icon">🔒</div><div class="seal-text">Criptografia SSL</div></div>
+          <div class="seal-item"><div class="seal-icon">🛡️</div><div class="seal-text">LGPD</div></div>
+          <div class="seal-item"><div class="seal-icon">☁️</div><div class="seal-text">Servidores Seguros</div></div>
+          <div class="seal-item"><div class="seal-icon">🔄</div><div class="seal-text">Backups Diários</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Depoimentos -->
+    <section id="depoimentos" class="content-section">
+      <div class="container">
+        <h2 class="section-title-left animate-on-scroll">Quem usa, aprova</h2>
+        <div class="testimonial-carousel animate-on-scroll">
+          <div class="card-testimonial">
+            <div class="testimonial-quote-icon">“</div>
+            <div class="testimonial-author">
+              <img src="https://i.pravatar.cc/50?img=1" alt="Mariana Costa">
+              <div>
+                <h4>Mariana Costa</h4>
+                <span>CEO, Loja Impulso</span>
+              </div>
+            </div>
+            <p>"Com o Seconds, centralizamos tudo. Nosso faturamento cresceu 30%!"</p>
+          </div>
+          <div class="card-testimonial">
+            <div class="testimonial-quote-icon">“</div>
+            <div class="testimonial-author">
+              <img src="https://i.pravatar.cc/50?img=2" alt="Lucas Andrade">
+              <div>
+                <h4>Lucas Andrade</h4>
+                <span>Gerente, Techzilla</span>
+              </div>
+            </div>
+            <p>"Ajustamos nossos preços e saímos na frente. Ferramenta essencial."</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Parceiros -->
+    <section id="parceiros" class="content-section">
+      <div class="container">
+        <h2 class="section-title animate-on-scroll">Conheça nossos parceiros</h2>
+        <div class="partners-grid animate-on-scroll">
+          <div class="partner-logo"><img src="https://www.seconds.com.br/wp-content/uploads/2023/07/logo-bling.png" alt="Bling"></div>
+          <div class="partner-logo"><img src="https://www.seconds.com.br/wp-content/uploads/2023/07/logo-tiny.svg" alt="Tiny"></div>
+          <div class="partner-logo"><img src="https://www.seconds.com.br/wp-content/uploads/2023/07/logo-vtex.svg" alt="VTEX"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sobre nós -->
+    <section id="sobre" class="content-section">
+      <div class="container about-us-container">
+        <div class="about-us-text animate-on-scroll">
+          <h2>Nascemos para simplificar o complexo.</h2>
+          <p class="mission"><i>Nossa missão é dar clareza para transformar dados em decisões lucrativas.</i></p>
+          <p>Vendedores como você enfrentam muitos desafios no dia a dia — criamos o Seconds para descomplicar.</p>
+        </div>
+        <div class="about-us-image animate-on-scroll">
+          <img src="https://www.seconds.com.br/wp-content/uploads/2024/01/Evento-Mercado-Livre.png" alt="Evento Seconds">
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA final -->
     <section id="contato" class="cta-final-section">
       <div class="container animate-on-scroll">
         <h2>Pronto para dominar seu marketplace?</h2>
@@ -41,6 +169,7 @@
     </section>
   </main>
 
+  <!-- Rodapé -->
   <footer class="main-footer-section">
     <div class="container footer-container">
       <div class="footer-column">
@@ -55,3 +184,4 @@
   <script src="js/main.js"></script>
 </body>
 </html>
+
